@@ -2,8 +2,9 @@
 ;;; <summary>
 ;;; The main entry point for the application.
 ;;; </summary>
-main
+main Orders
 
 proc
+	stop 
 
 endmain
