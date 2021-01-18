@@ -4,7 +4,47 @@
 ;;; </summary>
 main Orders
 
+	record header
+		;Order Number
+		oh_number ,d6
+
+		;Customer account code
+		oh_customer ,a8
+
+		;Order Date
+		oh_date ,d8
+
+		;Order placed by
+		oh_contact ,a20
+
+		;Sales rep code
+		oh_salesrep  ,d4
+	endrecord
+
+	structure strDetail
+		;order number
+		od_number ,d6
+
+		;Item number
+		od_item ,d4
+
+		;Part number
+		od_part ,a10
+
+		;Quality ordered 
+		od_qty ,d5
+
+		;Unit price
+		od_unit_price ,d8.2
+
+	endstructure 
+
+	record 
+		detail ,strDetail
+	endrecord
+
 proc
+	 
 	stop 
 
 endmain
