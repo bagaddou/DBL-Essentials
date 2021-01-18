@@ -43,8 +43,26 @@ main Orders
 		detail ,strDetail
 	endrecord
 
+
+	record current_date
+		 year ,d4 
+		month ,d2
+		day ,d2
+		mun ,d2
+		sec ,d2
+		msec ,d4
+	endrecord
+
+	record new_field
+		  ,d8 		 
+	endrecord
+	
+
 proc
-	 
+	
+	current_date = %datetime
+	new_field = current_date
+
 	stop 
 
 endmain
