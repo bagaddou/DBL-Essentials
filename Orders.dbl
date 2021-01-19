@@ -45,24 +45,43 @@ main Orders
 
 
 	record current_date
-		 year ,d4 
-		month ,d2
-		day ,d2
-		mun ,d2
-		sec ,d2
-		msec ,d4
+		year			,d4 
+		month			,d2
+		day				,d2
+		mun				,d2
+		sec				,d2
+		msec			,d4
 	endrecord
 
 	record new_field
-		  ,d8 		 
+						,d8 
 	endrecord
-	
 
-proc
-	
+	record  	
+		term_ch		,i4		,1
+	endrecord
+
+proc	
 	current_date = %datetime
 	new_field = current_date
+	 
 
-	stop 
+	call startup
+	call process
+	call shutdown     
+
+	stop
+
+startup,
+
+	return
+
+process,
+
+	return
+
+shutdown,
+
+	return
 
 endmain
