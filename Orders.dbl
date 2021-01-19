@@ -5,37 +5,21 @@
 main Orders
 
 	record header
-		;Order Number
-		oh_number ,d6
-
-		;Customer account code
-		oh_customer ,a8
-
-		;Order Date
-		oh_date ,d8
-
-		;Order placed by
-		oh_contact ,a20
-
-		;Sales rep code
-		oh_salesrep  ,d4
+		 
+		oh_number,				d6		;Order Number
+		oh_customer,			a8		;Customer account code
+		oh_date,				d8		;Order Date 
+		oh_contact,				a20		;Order placed by 
+		oh_salesrep,			d4		;Sales rep code
 	endrecord
 
-	structure strDetail
-		;order number
-		od_number ,d6
+	structure strDetail 
 
-		;Item number
-		od_item ,d4
-
-		;Part number
-		od_part ,a10
-
-		;Quality ordered 
-		od_qty ,d5
-
-		;Unit price
-		od_unit_price ,d8.2
+		od_number,				d6		;order number 
+		od_item,				d4		;Item number 
+		od_part,				a10		;Part number 
+		od_qty,					d5		;Quality ordered 
+		od_unit_price,			d8.2	;Unit price	
 
 	endstructure 
 
@@ -58,7 +42,8 @@ main Orders
 	endrecord
 
 	record  	
-		term_ch		,i4		,1
+		term_ch,		i4		,1
+		in_data,		a10		
 	endrecord
 
 proc	
@@ -70,18 +55,27 @@ proc
 	call process
 	call shutdown     
 
-	stop
+	
 
 startup,
+
+	open(term_ch,  o, "tt:")
+	xcall flags(7004020, 1)
+	display(term_ch,$scr_clr(screen))
 
 	return
 
 process,
+	display(term_ch,$scr_pos(10,20), "Welcome!")
+	display(term_ch,$scr_pos(11, 20), "Date is:" ,^a(current_date.day),"/",^a(current_date.month),"/",^a(current_date.year))
+	accept(term_ch, in_data)
+	
 
 	return
 
 shutdown,
-
+	display(term_ch,$scr_clr(screen))
+	close term_ch
 	return
 
 endmain
