@@ -48,9 +48,15 @@
     <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="detail.def" />
-    <Compile Include="header.def" />
     <Compile Include="Orders.dbl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="detail.def">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="header.def">
+      <SubType>Content</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>

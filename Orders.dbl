@@ -5,9 +5,9 @@
  
 main Orders
 	.include "WND:windows.def"
-
-	.include "INC:header.def"
 	.include "INC:detail.def"
+	.include "INC:header.def" 
+	 
 
 	record current_date
 		year			,d4 
