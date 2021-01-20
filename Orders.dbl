@@ -2,7 +2,9 @@
 ;;; <summary>
 ;;; The main entry point for the application.
 ;;; </summary>
+ 
 main Orders
+	.include "WND:windows.def"
 
 	record header
 		 
@@ -27,7 +29,6 @@ main Orders
 		detail ,strDetail
 	endrecord
 
-
 	record current_date
 		year			,d4 
 		month			,d2
@@ -38,44 +39,59 @@ main Orders
 	endrecord
 
 	record new_field
-						,d8 
+		,d8 
 	endrecord
 
 	record  	
 		term_ch,		i4		,1
-		in_data,		a10		
+		wndid,			i4		
+		in_data,		a10	
+		input_char,		a1
 	endrecord
 
 proc	
 	current_date = %datetime
-	new_field = current_date
-	 
+	new_field = current_date	 
 
 	call startup
 	call process
-	call shutdown     
-
+	call shutdown  
 	
 
-startup,
+	stop
 
+startup,
 	open(term_ch,  o, "tt:")
 	xcall flags(7004020, 1)
+
+	xcall w_init(1,term_ch,5 )	
+	 
 	display(term_ch,$scr_clr(screen))
+
+	xcall w_caption(WC_SET, "My First Synergy Application")
 
 	return
 
 process,
-	display(term_ch,$scr_pos(10,20), "Welcome!")
-	display(term_ch,$scr_pos(11, 20), "Date is:" ,^a(current_date.day),"/",^a(current_date.month),"/",^a(current_date.year))
-	accept(term_ch, in_data)
+
+	xcall w_proc(WP_CREATE, wndid, "wndid" ,3,15) 
+	xcall w_proc(WP_PLACE,wndid,9,30)
+	xcall w_brdr(wndid,WB_ON,WB_TITLE,"Message",WB_TPOS,WBT_TOP,WBT_CENTER)
+	xcall w_disp(wndid,WD_POS,2,2,"Hello")  
+
+	xcall w_disp(wndid, WD_ACCEPT, input_char)
+
+
+	xcall w_proc(WP_DELETE,wndid)
 	
 
 	return
 
-shutdown,
+shutdown, 
 	display(term_ch,$scr_clr(screen))
+	xcall w_exit 
 	close term_ch
+
 	return
 
 endmain
