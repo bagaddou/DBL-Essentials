@@ -55,10 +55,9 @@ proc
 
 	call startup
 	call process
-	call shutdown  
-	
+	call shutdown     
 
-	stop
+	
 
 startup,
 	open(term_ch,  o, "tt:")
