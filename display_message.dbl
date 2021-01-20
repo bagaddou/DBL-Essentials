@@ -1,0 +1,36 @@
+
+;;; <summary>
+;;; Create and display a window with a message
+;;; </summary>
+;;; <param name="a_message">THe message to display</param>
+subroutine display_message
+	required in a_message,			a
+	endparams
+
+	.include "WND:windows.def" 
+
+	record local
+		width,			d4
+		col,			d4
+		wndid,			i4	
+		input_char,		a1
+	endrecord
+ 
+
+proc
+	width = %trim(a_message) + 2 
+	col = (80 - width) / 2
+
+	xcall w_proc(WP_CREATE, wndid, "wndid" ,3,width) 
+	xcall w_proc(WP_PLACE,wndid,9,col)
+	xcall w_brdr(wndid,WB_ON,WB_TITLE,"Message",WB_TPOS,WBT_TOP,WBT_CENTER)
+	xcall w_disp(wndid,WD_POS,2,2,%atrim(a_message))  
+
+	xcall w_disp(wndid, WD_ACCEPT, input_char)
+
+
+	xcall w_proc(WP_DELETE,wndid)
+
+	xreturn
+	
+endsubroutine

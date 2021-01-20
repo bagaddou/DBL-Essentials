@@ -31,7 +31,9 @@ main Orders
 
 proc	
 	current_date = %datetime
-	new_field = current_date	 
+	new_field = current_date
+	
+	 
 
 	call startup
 	call process
@@ -53,20 +55,13 @@ startup,
 
 	return
 
-process,
-
-	xcall w_proc(WP_CREATE, wndid, "wndid" ,3,15) 
-	xcall w_proc(WP_PLACE,wndid,9,30)
-	xcall w_brdr(wndid,WB_ON,WB_TITLE,"Message",WB_TPOS,WBT_TOP,WBT_CENTER)
-	xcall w_disp(wndid,WD_POS,2,2,"Hello")  
-
-	xcall w_disp(wndid, WD_ACCEPT, input_char)
-
-
-	xcall w_proc(WP_DELETE,wndid)
-	
+process, 
+	xcall display_message("Hello")
+	xcall display_message("Press space key to show message")
+	xcall display_message("Welcome")
 
 	return
+
 
 shutdown, 
 	display(term_ch,$scr_clr(screen))
