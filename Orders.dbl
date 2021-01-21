@@ -39,7 +39,6 @@ proc
 	call process
 	call shutdown     
 
-	;Somehow you removed the STOP statement, whcih causes a "RETURN WITH NO XCALL" error on the RETURN statement below
 	stop
 	
 
