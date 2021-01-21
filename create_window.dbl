@@ -1,0 +1,29 @@
+;;; <summary>
+;;; This routine should return the window ID of the window which has been created
+;;; </summary>
+;;; <param name="a_winId">Returned ID of the created window</param>
+;;; <param name="a_winName">Name of window to create</param>
+;;; <param name="a_winHeight">Height</param>
+;;; <param name="a_winWidth">width of window</param>
+;;; <param name="a_rowPos">screen row for window placement</param>
+;;; <param name="a_colPos">screen column for window placement</param>
+;;; <param name="a_winTitle">optional title</param>
+subroutine create_window
+	required  out a_winId,			i
+	required  in a_winName,		a
+	required  in a_winHeight,		n
+	required  in a_winWidth,		n
+	required  in a_rowPos,			n
+	required  in a_colPos,			n
+	optional  in a_winTitle,		a
+	endparams
+
+	.include "WND:windows.def" 
+proc
+
+	xcall w_proc(WP_CREATE, a_winId, a_winName ,a_winHeight,a_winWidth) 
+	xcall w_proc(WP_PLACE,a_winId,a_rowPos,a_colPos)
+	xcall w_brdr(a_winId,WB_ON,WB_TITLE,a_winTitle,WB_TPOS,WBT_TOP,WBT_CENTER)
+	
+	xreturn
+endsubroutine

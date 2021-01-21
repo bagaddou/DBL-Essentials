@@ -19,17 +19,14 @@ subroutine display_message
 
 proc
 	width = %trim(a_message) + 2 
-	col = (80 - width) / 2
+	col = (80 + width) / 2
 
-	xcall w_proc(WP_CREATE, wndid, "wndid" ,3,width) 
-	xcall w_proc(WP_PLACE,wndid,9,col)
-	xcall w_brdr(wndid,WB_ON,WB_TITLE,"Message",WB_TPOS,WBT_TOP,WBT_CENTER)
-	xcall w_disp(wndid,WD_POS,2,2,%atrim(a_message))  
+	xcall create_window(wndid, "wndid", 3,width,9,col,"Message")
+	xcall display_text(wndid,2,2,a_message)	
+	
+	xcall wait_key(wndid,2,width,input_char)
 
-	xcall w_disp(wndid, WD_ACCEPT, input_char)
-
-
-	xcall w_proc(WP_DELETE,wndid)
+	xcall delete_window(wndid)
 
 	xreturn
 	

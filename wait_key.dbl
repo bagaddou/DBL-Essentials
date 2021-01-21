@@ -1,0 +1,24 @@
+;;; <summary>
+;;; Accept a single key stroke at the specific position in a specific window
+;;; </summary>
+;;; <param name="a_winId"></param>
+;;; <param name="a_row">row position</param>
+;;; <param name="a_col">column positiont</param>
+;;; <param name="a_chart">key pressed</param>
+subroutine wait_key
+	required in a_winId,			i	
+	required  in a_row,				n
+	required  in a_col,				n
+	required  out inchar,			a
+	endparams
+
+	 
+	.include "WND:windows.def" 
+proc
+
+	
+
+	xcall w_disp(a_winId,WD_POS,a_row,a_col,WD_ACCEPT,  inchar)
+	
+	xreturn
+endsubroutine
