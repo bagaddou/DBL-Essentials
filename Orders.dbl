@@ -7,8 +7,6 @@ main Orders
 	.include "WND:windows.def"
 	.include "INC:detail.def"
 	.include "INC:header.def" 
-	 
-	 
 
 	record current_date
 		year			,d4 
@@ -29,13 +27,18 @@ main Orders
 		in_data,		a10	
 		input_char,		a1
 		OrdWin,			i4 
+		detailWin,	    i4 
+	endrecord
+
+	record
+		memH,			D_HANDLE
+		memS,			i4
+		rowN,			i4 
 	endrecord
 
 proc	
 	current_date = %datetime
-	new_field = current_date
-	
-	 
+	new_field = current_date	 
 
 	call startup
 	call process
@@ -69,7 +72,7 @@ process,
 
 		using input_char select
 		("1"),
-		    call order_header
+			call order_header
 		("2"),
 			xcall display_message("View last order, 2 is selected")
 		("3"),		 
@@ -80,7 +83,8 @@ process,
 	return
 
 
-shutdown, 
+shutdown, 	
+
 	display(term_ch,$scr_clr(screen))
 	xcall w_exit 
 	close term_ch
@@ -90,7 +94,7 @@ shutdown,
 
 order_header, 
 
-	xcall create_window(ordwin,"Order",12,60,5,10,"Order Processing Menu")	 
+	xcall create_window(ordwin,"Order",12,60,5,10,"Order header")	 
 	xcall display_text(ordwin,2,2, "Order Number            :")
 	xcall display_text(ordwin,3,2, "Customer Account Code   :")
 	xcall display_text(ordwin,4,2, "Order Date              :")
@@ -100,25 +104,73 @@ order_header,
 	repeat		
 
 	begin
+		 
 		xcall input(ordwin,2,28,header.oh_number)
 
 		if (!header.oh_number)
 		begin
 			exitloop
 		end
-
 	 
 		xcall input(ordwin,3,28,header.oh_customer, true)
-		xcall input(ordwin,4,28,header.oh_date, true,,true)
+		xcall input(ordwin,4,28,header.oh_date,,,true)
 		xcall input(ordwin,5,28,header.oh_contact, true)
 		xcall input(ordwin,6,28,header.oh_lesrep, true)
 
-		xcall clear_box(ordwin,2,28,6,60)
-		 
+	   ;Create memory handle		 
+		memH = %mem_proc(DM_ALLOC,^size(strDetail)*(memS=3))		 
+
+		call order_detail
+
+		;Delete memory 
+		memH = %mem_proc(DM_FREE,memH)
+		set memS,rowN = 0
+		
+
+		xcall clear_box(ordwin,2,28,6,60)		 
 	end
 	xcall delete_window(ordwin)
 
 	return
+
+order_detail,
+
+	xcall create_window(detailWin,"OrderDetail",10,60,5,10,"Order Detail")	 
+	xcall display_text(detailWin,2,2, "Order number      :" + %string(header.oh_number,"XXXXXX"))
+	xcall display_text(detailWin,3,2, "Item number       :")
+	xcall display_text(detailWin,4,2, "Part numbe        :")
+	xcall display_text(detailWin,5,2, "Quality ordered   :")
+	xcall display_text(detailWin,6,2, "Unit price        :")
+	
+	repeat		
+
+	begin  
+
+		if ((rowN += 1)>rowN)
+		begin
+			memH = %mem_proc(DM_RESIZ, ^size(strDetail)*(memS+=3), memH)
+		end
+
+		^m(strDetail[rowN].od_number,memH) = header.oh_number
+		^m(strDetail[rowN].od_item,memH) = rowN
+
+		xcall display_text(detailWin,3,23,%string(rowN))
+
+		xcall input(detailWin,4,23,^m(strDetail[rowN].od_part,memH))
+
+		if (!^m(strDetail[rowN].od_part,memH))
+		begin
+			exitloop
+		end	 
+		 
+		xcall input(detailWin,5,23,^m(strDetail[rowN].od_qty,memH), true)
+		xcall input(detailWin,6,23,^m(strDetail[rowN].od_unit_price,memH), true)
+
+		xcall clear_box(detailWin,3,23,6,60)		 
+	end
+	xcall delete_window(detailWin)
+
+	return		
 
 
 endmain

@@ -22,7 +22,7 @@ subroutine clear_box
 proc
 	for row from a_row_from thru a_row_to  
 	begin
-		xcall w_disp(a_windid, WD_POS,row,a_col_from,space(1:a_col_to-a_col_from))
+		xcall w_disp(a_windid, WD_POS,row,a_col_from,space(1:a_col_to - a_col_from))
 	end
 	xreturn
 endsubroutine
