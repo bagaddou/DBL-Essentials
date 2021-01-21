@@ -1,0 +1,28 @@
+;;; <summary>
+;;; Clear the box by displaying spaces
+;;; </summary>
+;;; <param name="a_windid">WIndow ID</param>
+;;; <param name="a_row_from">Row from</param>
+;;; <param name="a_col_from">Col from</param>
+;;; <param name="a_row_to">Row to</param>
+;;; <param name="a_col_to">RCol to</param>
+subroutine clear_box
+	required in a_windid		,i
+	required in a_row_from		,d
+	required in a_col_from		,d
+	required in a_row_to		,d
+	required in a_col_to		,d
+	endparams
+	.include "WND:windows.def" 
+
+	record
+		row,		i4
+		space,		a80
+	endrecord
+proc
+	for row from a_row_from thru a_row_to  
+	begin
+		xcall w_disp(a_windid, WD_POS,row,a_col_from,space(1:a_col_to-a_col_from))
+	end
+	xreturn
+endsubroutine

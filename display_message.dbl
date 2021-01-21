@@ -19,7 +19,7 @@ subroutine display_message
 
 proc
 	width = %trim(a_message) + 2 
-	col = (80 + width) / 2
+	col = (80 - width) / 2
 
 	xcall create_window(wndid, "wndid", 3,width,9,col,"Message")
 	xcall display_text(wndid,2,2,a_message)	
