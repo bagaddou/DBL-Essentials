@@ -140,22 +140,20 @@ order_header,
 		end
 
 		;Check if the order already exist
-		if (%file_access(FileOp.Find,header_tt,,header.oh_number)== FileResult.OK)
+		if (%file_access(FileOp.Find,header_tt,,header.oh_number) == FileResult.OK)
 		begin
-			xcall display_message("Order already exist")
+			xcall display_message("Order already exists")
 			nextloop
 		end
 	 
 		xcall input(ordwin,3,28,header.oh_customer, true)
 		xcall input(ordwin,4,28,header.oh_date,,,true)
-
-
 		xcall input(ordwin,5,28,header.oh_contact, true)
 		xcall input(ordwin,6,28,header.oh_lesrep, true)
 
 		;Create memory handle		 
 		memH = %mem_proc(DM_ALLOC,^size(strDetail)*(memS=3))		 
-
+		rowN = 0
 		call order_detail
 
 		;Save the order
@@ -163,7 +161,7 @@ order_header,
 		begin
 			if(%file_access(FileOp.Create, header_tt, header)!= FileResult.OK) then
 			begin
-				xcall display_message("Order already exist")
+				xcall display_message("Failed to save the order")
 			end
 			else	
 			begin
@@ -172,7 +170,8 @@ order_header,
 				begin
 					if(%file_access(FileOp.Create, detail_tt, ^m(strDetail[ix],memH))!= FileResult.OK) 
 					begin
-						xcall display_message("Order already exist")
+						xcall display_message("Failed to save the order")
+						exitloop
 					end					 
 				end
 			end
@@ -216,10 +215,13 @@ order_detail,
 
 		xcall input(detailWin,4,23,^m(strDetail[rowN].od_part,memH))
 
-		if (!^m(strDetail[rowN].od_part,memH))
+		if (!^m(strDetail[rowN].od_part,memH))		
 		begin
+			rowN-=1
 			exitloop
-		end	 
+		end
+			
+		 
 		 
 		xcall input(detailWin,5,23,^m(strDetail[rowN].od_qty,memH), true)
 		xcall input(detailWin,6,23,^m(strDetail[rowN].od_unit_price,memH), true)

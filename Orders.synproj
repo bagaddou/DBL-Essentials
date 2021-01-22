@@ -48,15 +48,7 @@
     <DebugOptimize>Optimize</DebugOptimize>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="clear_box.dbl" />
-    <Compile Include="create_window.dbl" />
-    <Compile Include="delete_window.dbl" />
-    <Compile Include="display_message.dbl" />
-    <Compile Include="display_text.dbl" />
-    <Compile Include="file_access.dbl" />
-    <Compile Include="input.dbl" />
     <Compile Include="Orders.dbl" />
-    <Compile Include="wait_key.dbl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="detail.def">
@@ -65,6 +57,13 @@
     <Content Include="header.def">
       <SubType>Content</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SubsOLB\SubsOLB.synproj">
+      <Name>SubsOLB</Name>
+      <Project>{2e39de70-fa08-4948-9b03-3261c9aca6b6}</Project>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Synergex\dbl\Synergex.SynergyDE.Traditional.targets" />
   <PropertyGroup>
