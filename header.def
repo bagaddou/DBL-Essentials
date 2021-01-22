@@ -1,7 +1,0 @@
-record header		 
-	oh_number,			d6		;Order Number
-	oh_customer,		a8		;Customer account code
-	oh_date,			d8		;Order Date 
-	oh_contact,			a20		;Order placed by 
-	oh_lesrep,			d4		;Sales rep code
-endrecord

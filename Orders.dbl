@@ -5,8 +5,10 @@
  
 main Orders
 	.include "WND:windows.def"
-	.include "INC:detail.def"
-	.include "INC:header.def" 
+
+	.include "HEADER" repository, record="header"
+	.include "DETAIL" repository, record="strDetail"
+
 
 	record current_date
 		year			,d4 

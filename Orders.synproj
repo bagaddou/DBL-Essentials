@@ -51,17 +51,14 @@
     <Compile Include="Orders.dbl" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="detail.def">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="header.def">
-      <SubType>Content</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SubsOLB\SubsOLB.synproj">
-      <Name>SubsOLB</Name>
-      <Project>{2e39de70-fa08-4948-9b03-3261c9aca6b6}</Project>
+    <ProjectReference Include="..\Repository\Repository.synproj">
+      <Name>Repository</Name>
+      <Project>{3d41ce18-9cf9-4a6c-ad49-3ddd4fa821d9}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SubsELB\SubsELB.synproj">
+      <Name>SubsELB</Name>
+      <Project>{7108f40a-df8e-4ba5-a230-5de1f435b20c}</Project>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
