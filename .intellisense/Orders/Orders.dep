@@ -1,5 +1,6 @@
 C:\Users\baddou\source\workspace\Orders\clear_box.dbl
 -C:\Program Files\Synergex\SynergyDE\toolkit\windows.def
+C:\Users\baddou\source\workspace\Orders\file_access.dbl
 C:\Users\baddou\source\workspace\Orders\input.dbl
 C:\Users\baddou\source\workspace\Orders\create_window.dbl
 C:\Users\baddou\source\workspace\Orders\display_message.dbl
@@ -7,7 +8,7 @@ C:\Users\baddou\source\workspace\Orders\delete_window.dbl
 C:\Users\baddou\source\workspace\Orders\display_text.dbl
 C:\Users\baddou\source\workspace\Orders\header.def
 C:\Users\baddou\source\workspace\Orders\wait_key.dbl
-C:\Users\baddou\source\workspace\Orders\detail.def
 C:\Users\baddou\source\workspace\Orders\Orders.dbl
 -C:\Users\baddou\source\workspace\Orders\detail.def
 -C:\Users\baddou\source\workspace\Orders\header.def
+C:\Users\baddou\source\workspace\Orders\detail.def

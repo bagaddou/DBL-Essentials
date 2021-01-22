@@ -36,6 +36,11 @@ main Orders
 		rowN,			i4 
 	endrecord
 
+	record
+		header_tt,		i4
+		detail_tt,		i4
+	endrecord
+
 proc	
 	current_date = %datetime
 	new_field = current_date	 
@@ -47,15 +52,35 @@ proc
 	stop
 	
 
-startup,
+startup,	
+
 	open(term_ch,  o, "tt:")
-	xcall flags(7004020, 1)
+	xcall flags(7004020, 1)  
 
 	xcall w_init(1,term_ch,5 )	
 	 
 	display(term_ch,$scr_clr(screen))
 
 	xcall w_caption(WC_SET, "My First Synergy Application")
+
+	repeat	
+	begin
+		;open the header file
+		open(header_tt =0, U:I, "DAT:header.ism")[$ERR_FNF=hnf]
+		exitloop
+	hnf,
+		xcall isamc("DAT:header.ism", ^size(header),1,"start=1,length=6,nodups,nomodify")	
+	end
+
+	 
+	repeat	
+	begin
+		;open the detail file
+		open(detail_tt =0, U:I, "DAT:detail.ism")[$ERR_FNF=dnf]
+		exitloop
+	dnf,
+		xcall isamc("DAT:detail.ism", ^size(detail),1,"start=1:7,length=6:4,nodups,nomodify")
+	end
 
 	return
 
@@ -74,7 +99,7 @@ process,
 		("1"),
 			call order_header
 		("2"),
-			xcall display_message("View last order, 2 is selected")
+			call view_header 
 		("3"),		 
 			exitloop
 		endusing		
@@ -83,11 +108,14 @@ process,
 	return
 
 
-shutdown, 	
+shutdown,
+	
+	close header_tt, detail_tt
 
 	display(term_ch,$scr_clr(screen))
 	xcall w_exit 
 	close term_ch
+
 
 	return
 
@@ -101,8 +129,7 @@ order_header,
 	xcall display_text(ordwin,5,2, "Order placed By         :")
 	xcall display_text(ordwin,6,2, "Sales Rep Code          :")
 	
-	repeat		
-
+	repeat
 	begin
 		 
 		xcall input(ordwin,2,28,header.oh_number)
@@ -111,16 +138,47 @@ order_header,
 		begin
 			exitloop
 		end
+
+		;Check if the order already exist
+		if (%file_access(FileOp.Find,header_tt,,header.oh_number)== FileResult.OK)
+		begin
+			xcall display_message("Order already exist")
+			nextloop
+		end
 	 
 		xcall input(ordwin,3,28,header.oh_customer, true)
 		xcall input(ordwin,4,28,header.oh_date,,,true)
+
+
 		xcall input(ordwin,5,28,header.oh_contact, true)
 		xcall input(ordwin,6,28,header.oh_lesrep, true)
 
-	   ;Create memory handle		 
+		;Create memory handle		 
 		memH = %mem_proc(DM_ALLOC,^size(strDetail)*(memS=3))		 
 
 		call order_detail
+
+		;Save the order
+		if(rowN)
+		begin
+			if(%file_access(FileOp.Create, header_tt, header)!= FileResult.OK) then
+			begin
+				xcall display_message("Order already exist")
+			end
+			else	
+			begin
+				data ix,  i4
+				for ix from 1 thru  rowN
+				begin
+					if(%file_access(FileOp.Create, detail_tt, ^m(strDetail[ix],memH))!= FileResult.OK) 
+					begin
+						xcall display_message("Order already exist")
+					end					 
+				end
+			end
+					
+		end
+
 
 		;Delete memory 
 		memH = %mem_proc(DM_FREE,memH)
@@ -146,9 +204,9 @@ order_detail,
 
 	begin  
 
-		if ((rowN += 1)>rowN)
+		if ((rowN += 1)>memS)
 		begin
-			memH = %mem_proc(DM_RESIZ, ^size(strDetail)*(memS+=3), memH)
+			memH = %mem_proc(DM_RESIZ,^size(strDetail)*(memS+=3), memH)
 		end
 
 		^m(strDetail[rowN].od_number,memH) = header.oh_number
@@ -172,5 +230,105 @@ order_detail,
 
 	return		
 
+	;;;**********************************************************************
+	;;;*				view the order header and details                   * 
+	;;;**********************************************************************
 
+view_header, 
+
+	xcall create_window(ordwin,"Order",12,60,5,10,"View an Order")	 
+	xcall display_text(ordwin,2,2, "Order Number            :")
+	xcall display_text(ordwin,3,2, "Customer Account Code   :")
+	xcall display_text(ordwin,4,2, "Order Date              :")
+	xcall display_text(ordwin,5,2, "Order placed By         :")
+	xcall display_text(ordwin,6,2, "Sales Rep Code          :")
+
+	xcall display_text(ordwin,8,2, "Press a key             :")
+	
+	repeat
+	begin
+		 
+		xcall input(ordwin,2,28,header.oh_number)
+
+		if (!header.oh_number)
+		begin
+			exitloop
+		end
+
+		;Check if the order already exist
+		if (%file_access(FileOp.Read,header_tt,header,header.oh_number)== FileResult.OK)
+		begin
+			xcall display_message("Order doesn't exist")
+			nextloop
+		end
+	 
+		xcall display_text(ordwin,3,28,header.oh_customer)
+		xcall display_text(ordwin,4,28,%string(header.oh_date,"XXXX/XX/XX"))
+		xcall display_text(ordwin,5,28,header.oh_contact)
+		xcall display_text(ordwin,6,28,%string(header.oh_lesrep))
+
+		begin
+			data onechar,	a1 
+			xcall wait_key(ordwin,8,23,input_char)
+		end
+
+		;Create memory handle		 
+		memH = %mem_proc(DM_ALLOC,^size(strDetail)*(memS=3))		 
+
+		call view_detail
+
+	
+
+		;Delete memory 
+		memH = %mem_proc(DM_FREE,memH)
+		set memS,rowN = 0
+		
+
+		xcall clear_box(ordwin,2,28,6,60)		 
+	end
+	xcall delete_window(ordwin)
+
+	return
+
+view_detail,
+
+	xcall create_window(detailWin,"OrderDetail",10,60,5,10," View Order Detail")	 
+	xcall display_text(detailWin,2,2, "Order number      :" + %string(header.oh_number,"XXXXXX"))
+	xcall display_text(detailWin,3,2, "Item number       :")
+	xcall display_text(detailWin,4,2, "Part numbe        :")
+	xcall display_text(detailWin,5,2, "Quality ordered   :")
+	xcall display_text(detailWin,6,2, "Unit price        :")
+	xcall display_text(detailWin,8,2, "Press a key       :")
+
+	if(%file_access(FileOp.Find, detail_tt,,header.oh_number)!=FileResult.OK) 
+	begin
+		nop
+	end
+	
+	repeat	
+	begin  
+		if(%file_access(FileOp.ReadNext, detail_tt,^m(strDetail[1],memH))!=FileResult.OK) || (^m(strDetail[1].od_number, memH) != header.oh_number)  
+		 
+		begin
+			exitloop 
+		end		 
+
+		xcall display_text(detailWin,3,23,%string(rowN += 1))
+
+		xcall display_text(detailWin,4,23,^m(strDetail[1].od_part,memH))		 
+		xcall display_text(detailWin,5,23,%string(^m(strDetail[1].od_qty,memH))) 
+		xcall display_text(detailWin,6,23,%string(^m(strDetail[1].od_unit_price,memH),"XXX,XXX.XX"))
+
+		begin
+			data onechar,	a1 
+			xcall wait_key(detailWin,8,23,input_char)
+		end
+
+		xcall clear_box(detailWin,3,23,6,60)		 
+	end
+	xcall delete_window(detailWin)
+
+	return		
+
+ 
 endmain
