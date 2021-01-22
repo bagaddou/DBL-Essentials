@@ -53,7 +53,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Repository\Repository.synproj">
       <Name>Repository</Name>
-      <Project>{3d41ce18-9cf9-4a6c-ad49-3ddd4fa821d9}</Project>
+      <Project>{048e5852-8704-4433-b658-e64f791d8319}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\SubsELB\SubsELB.synproj">

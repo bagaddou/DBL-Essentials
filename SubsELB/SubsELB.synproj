@@ -85,11 +85,4 @@
       <Link>wait_key.dbl</Link>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SubsOLB\SubsOLB.synproj">
-      <Name>SubsOLB</Name>
-      <Project>{2e39de70-fa08-4948-9b03-3261c9aca6b6}</Project>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
 </Project>
