@@ -259,8 +259,8 @@ view_header,
 			exitloop
 		end
 
-		;Check if the order already exist
-		if (%file_access(FileOp.Read,header_tt,header,header.oh_number)== FileResult.OK)
+		;Check if the order already exist                           ;;STEVE: I changed this from == to !=
+		if (%file_access(FileOp.Read,header_tt,header,header.oh_number) != FileResult.OK)
 		begin
 			xcall display_message("Order doesn't exist")
 			nextloop

@@ -16,9 +16,16 @@ subroutine wait_key
 	.include "WND:windows.def" 
 proc
 
-	
-
 	xcall w_disp(a_winId,WD_POS,a_row,a_col,WD_ACCEPT,  inchar)
+
+    ;;STEVE: I added this to make sure that if the user presses a key that returns 2 characters,
+    ;;such as ENTER, or a function key, we accept and discard the second character so it can't
+    ;;interfere later.
+    while (%ttsts)
+    begin
+        data tmpchr, a1
+        xcall w_disp(a_winId,WD_POS,a_row,a_col,WD_ACCEPT,tmpchr)
+    end
 	
 	xreturn
 endsubroutine
